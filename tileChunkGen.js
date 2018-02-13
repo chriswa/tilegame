@@ -17,7 +17,8 @@ export function generate(offset) {
 			
 			let tile = 0
 			if (value * 0.2 + depth >= 2.5) {
-				tile = 17
+				//tile = 17
+				tile = Math.floor(Math.random() * 5) + 17
 			}
 			else if (value * 1.0 + depth >= 1.2) {
 				tile = 1

@@ -5,10 +5,9 @@ export const gl = canvas.getContext('webgl2', {
 })
 
 if (!gl) {
-	alert(`Sorry!\n\nYour browser does not support WebGL2.\n\nTry Chrome.`)
+	alert(`Sorry!\n\nYour browser does not support WebGL2.\n\nTry Chrome?`)
 }
 
-gl.enable(gl.DEPTH_TEST)
 gl.enable(gl.BLEND)
 gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 

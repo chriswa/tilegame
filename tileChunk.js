@@ -6,11 +6,12 @@ export default class TileChunk {
 
 	constructor(chunkPos) {
 		this.chunkPos = twgl.v3.copy(chunkPos)
-		this.worldPos = twgl.v3.mulScalar(this.chunkPos, tileMetrics.chunkSize)
+		this.worldTilePos = twgl.v3.mulScalar(this.chunkPos, tileMetrics.chunkSize)
+		this.worldPos = twgl.v3.mulScalar(this.chunkPos, tileMetrics.chunkSize * tileMetrics.tileSize)
 
 		this.vertexArray = tileRenderer.createVertexArray()
 
-		this.tileArray = tileChunkGen.generate(this.worldPos)
+		this.tileArray = tileChunkGen.generate(this.worldTilePos)
 
 		this.drawQuads() // do this before calling tileRenderer.createChunkBuffer
 
