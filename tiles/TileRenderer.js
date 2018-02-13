@@ -31,8 +31,8 @@ const vertexShaderSource = `#version 300 es
 		int cornerX = ((cornerId + 1) & 2) >> 1;
 		int cornerY = (cornerId & 2) >> 1;
 		vec4 position = vec4(
-			float(quadX + cornerX),
-			float(quadY + cornerY),
+			float(quadX + cornerX) * 16.,
+			float(quadY + cornerY) * 16.,
 			-0.1,
 			1.
 		);
@@ -110,33 +110,19 @@ export function createChunkVao(glBuffer) {
 	return twgl.createVertexArrayInfo(gl, [programInfo], bufferInfo)
 }
 
-export function render(cameraOrigin, cameraZoom, chunks) {
+const finalMatrix = twgl.m4.create()
+
+export function render(worldViewProjectionMatrix, chunks) {
 	gl.useProgram(programInfo.program)
 	twgl.setUniforms(programInfo, { u_texture: texture })
-
-	//const scaleVector = twgl.v3.create(cameraZoom * 32 / gl.canvas.width, cameraZoom * -32 / gl.canvas.height, 1)
-	//const scaleMatrix = twgl.m4.scaling(scaleVector)
-
-	const scaleVector1 = twgl.v3.create(cameraZoom, cameraZoom, 1)
-	const scaleVector2 = twgl.v3.create(16, 16, 1)
-	
 
 	for (let chunkId in chunks) {
 		const chunk = chunks[chunkId]
 
-		//const translationMatrix = twgl.m4.translation(twgl.v3.create(
-		//	-cameraOrigin[0] + chunk.worldPos[0],
-		//	-cameraOrigin[1] + chunk.worldPos[1],
-		//	0))
-		//const worldViewProjectionMatrix = twgl.m4.multiply(scaleMatrix, translationMatrix)
+		const translation = twgl.v3.create(chunk.worldPos[0], chunk.worldPos[1], 0)
+		twgl.m4.translate(worldViewProjectionMatrix, translation, finalMatrix)
 
-		const translation = twgl.v3.create(-cameraOrigin[0] + chunk.worldPos[0], -cameraOrigin[1] + chunk.worldPos[1], 0)
-		const matrix = twgl.m4.ortho(-gl.canvas.width / 2, gl.canvas.width / 2, gl.canvas.height / 2, -gl.canvas.height / 2, -1, 1)
-		twgl.m4.scale(matrix, scaleVector1, matrix)
-		twgl.m4.translate(matrix, translation, matrix)
-		twgl.m4.scale(matrix, scaleVector2, matrix)
-
-		twgl.setUniforms(programInfo, { u_worldViewProjection: matrix })
+		twgl.setUniforms(programInfo, { u_worldViewProjection: finalMatrix })
 		twgl.setBuffersAndAttributes(gl, programInfo, chunk.vaoInfo)
 		twgl.drawBufferInfo(gl, chunk.vaoInfo)
 		//gl.drawElements(gl.TRIANGLES, TileMetrics.chunkArea * 6, indexBufferGlType, 0)

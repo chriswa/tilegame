@@ -6,8 +6,8 @@ const spriteGroups = []
 export function init() {
 }
 
-export function render(cameraOrigin, cameraZoom) {
-	SpriteRenderer.render(cameraOrigin, cameraZoom, spriteGroups)
+export function render(worldViewProjectionMatrix) {
+	SpriteRenderer.render(worldViewProjectionMatrix, spriteGroups)
 }
 
 export function createGroup(maxQuads, textureSrc, textureWidth, textureHeight) {

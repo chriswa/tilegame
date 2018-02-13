@@ -87,15 +87,10 @@ export function createVao(numQuads, glBuffer) {
 	return vaoInfo
 }
 
-export function render(cameraOrigin, cameraZoom, spriteGroups) {
+export function render(worldViewProjectionMatrix, spriteGroups) {
 	gl.useProgram(programInfo.program)
 
-	const scaleVector = twgl.v3.create(cameraZoom, cameraZoom, 1)
-	const translation = twgl.v3.create(-cameraOrigin[0], -cameraOrigin[1], 0)
-	const matrix = twgl.m4.ortho(-gl.canvas.width / 2, gl.canvas.width / 2, gl.canvas.height / 2, -gl.canvas.height / 2, -1000, 1000)
-	twgl.m4.scale(matrix, scaleVector, matrix)
-	twgl.m4.translate(matrix, translation, matrix)
-	twgl.setUniforms(programInfo, { u_worldViewProjection: matrix })
+	twgl.setUniforms(programInfo, { u_worldViewProjection: worldViewProjectionMatrix })
 	
 	for (var i = 0; i < spriteGroups.length; i += 1) {
 		const spriteGroup = spriteGroups[i]

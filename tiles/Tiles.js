@@ -11,6 +11,6 @@ export function loadChunk(chunkPos) {
 	this.chunks[chunkId] = new TileChunk(chunkPos)
 }
 
-export function render(cameraOrigin, cameraZoom) {
-	TileRenderer.render(cameraOrigin, cameraZoom, chunks)
+export function render(worldViewProjectionMatrix) {
+	TileRenderer.render(worldViewProjectionMatrix, chunks)
 }
