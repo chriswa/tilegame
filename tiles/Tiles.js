@@ -1,5 +1,5 @@
-import * as tileRenderer from './tileRenderer.js'
-import TileChunk from './tileChunk.js'
+import * as TileRenderer from './TileRenderer.js'
+import TileChunk from './TileChunk.js'
 
 export const chunks = {} // {`${x},${y}`: TileChunk}
 
@@ -12,5 +12,5 @@ export function loadChunk(chunkPos) {
 }
 
 export function render(cameraOrigin, cameraZoom) {
-	tileRenderer.render(cameraOrigin, cameraZoom, chunks)
+	TileRenderer.render(cameraOrigin, cameraZoom, chunks)
 }

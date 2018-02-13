@@ -1,10 +1,8 @@
-import * as tileMetrics from './tileMetrics.js'
-import * as gfx from './gfx.js'
-/** @type { WebGLRenderingContext } */
-const gl = gfx.gl
+import * as TileMetrics from './TileMetrics.js'
+import gl from '../gl.js'
 
 const texture = twgl.createTexture(gl, {
-	src: 'tiles.png',
+	src: 'assets/tiles.png',
 	mag: gl.NEAREST,
 	min: gl.NEAREST,
 	level: 0,
@@ -27,8 +25,8 @@ const vertexShaderSource = `#version 300 es
 
 		// detemine position from gl_VertexID!
 		int quadID = gl_VertexID / 4;
-		int quadX = quadID % ${tileMetrics.chunkSize};
-		int quadY = quadID / ${tileMetrics.chunkSize};
+		int quadX = quadID % ${TileMetrics.chunkSize};
+		int quadY = quadID / ${TileMetrics.chunkSize};
 		int cornerId = gl_VertexID % 4;
 		int cornerX = ((cornerId + 1) & 2) >> 1;
 		int cornerY = (cornerId & 2) >> 1;
@@ -70,7 +68,7 @@ const programInfo = twgl.createProgramInfo(gl, [ vertexShaderSource, fragmentSha
 const indexBufferGlType = gl.UNSIGNED_SHORT
 
 function createIndexBuffer() {
-	const maxQuads = tileMetrics.chunkArea
+	const maxQuads = TileMetrics.chunkArea
 	const indexArray = new Uint16Array(maxQuads * 6)
 	for (let quadIndex = 0, indexIndex = 0, vertIndex = 0; quadIndex < maxQuads; quadIndex += 1, indexIndex += 6, vertIndex += 4) {
 		indexArray[indexIndex + 0] = vertIndex + 0
@@ -87,7 +85,7 @@ const indexBuffer = createIndexBuffer()
 
 const vertsPerQuad = 4
 const elementsPerVert = 2
-const numVerts = tileMetrics.chunkArea * vertsPerQuad
+const numVerts = TileMetrics.chunkArea * vertsPerQuad
 const vertexByteStride = Uint32Array.BYTES_PER_ELEMENT * elementsPerVert
 
 
@@ -102,7 +100,7 @@ export function createChunkBuffer(vertexArray) {
 
 export function createChunkVao(glBuffer) {
 	const bufferInfo = {
-		numElements: tileMetrics.chunkArea * 6,
+		numElements: TileMetrics.chunkArea * 6,
 		indices: indexBuffer,
 		elementType: indexBufferGlType,
 		attribs: {
@@ -141,7 +139,7 @@ export function render(cameraOrigin, cameraZoom, chunks) {
 		twgl.setUniforms(programInfo, { u_worldViewProjection: matrix })
 		twgl.setBuffersAndAttributes(gl, programInfo, chunk.vaoInfo)
 		twgl.drawBufferInfo(gl, chunk.vaoInfo)
-		//gl.drawElements(gl.TRIANGLES, tileMetrics.chunkArea * 6, indexBufferGlType, 0)
+		//gl.drawElements(gl.TRIANGLES, TileMetrics.chunkArea * 6, indexBufferGlType, 0)
 
 	}
 

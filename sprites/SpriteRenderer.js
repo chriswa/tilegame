@@ -1,6 +1,4 @@
-import * as gfx from './gfx.js'
-/** @type { WebGLRenderingContext } */
-const gl = gfx.gl
+import gl from '../gl.js'
 
 const shaderAttributeOrder = ['a_instancePackedInt1', 'a_instancePackedInt2']
 

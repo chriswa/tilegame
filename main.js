@@ -1,27 +1,27 @@
-import * as tiles from './tiles.js'
-import * as sprites from './sprites.js'
-import Sprite from './sprite.js'
+import * as Tiles from './tiles/Tiles.js'
+import * as Sprites from './sprites/Sprites.js'
+import Sprite from './sprites/Sprite.js'
 import * as gfx from './gfx.js'
-const gl = gfx.gl
+import gl from './gl.js'
 
 // TILES
 // =====
 
-tiles.init()
+Tiles.init()
 for (let ty = 0; ty < 2; ty += 1) {
 	for (let tx = 0; tx < 3; tx += 1) {
-		tiles.loadChunk(twgl.v3.create(tx, ty, 0))
+		Tiles.loadChunk(twgl.v3.create(tx, ty, 0))
 	}
 }
 
 // SPRITES
 // =======
 
-const textureSrc = 'chicken.png'
+const textureSrc = 'assets/chicken.png'
 const textureWidth = 176
 const textureHeight = 32
-const maxQuads = 1000
-const spriteGroup = sprites.createGroup(maxQuads, textureSrc, textureWidth, textureHeight)
+const maxQuads = 100
+const spriteGroup = Sprites.createGroup(maxQuads, textureSrc, textureWidth, textureHeight)
 const chickens = []
 for (let i = 0; i < maxQuads; i += 1) {
 	const x = Math.floor(Math.random() * 16 * 120 * 3)
@@ -35,8 +35,9 @@ for (let i = 0; i < maxQuads; i += 1) {
 }
 function onUpdate(dt) {
 	chickens.forEach(chicken => {
-		chicken.y += dt * 0.001
-		chicken.updateQuad()
+		chicken.y += dt * 0.1
+		if (chicken.y > 16 * 30) { chicken.y -= 16 * 30 }
+		chicken.updatePos()
 	})
 }
 
@@ -78,8 +79,8 @@ function mainLoop() {
 
 	// render
 	gfx.clear()
-	tiles.render(cameraOrigin, cameraZoom)
-	sprites.render(cameraOrigin, cameraZoom)
+	Tiles.render(cameraOrigin, cameraZoom)
+	Sprites.render(cameraOrigin, cameraZoom)
 	requestAnimationFrame(mainLoop)
 }
 requestAnimationFrame(mainLoop)

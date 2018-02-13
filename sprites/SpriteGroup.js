@@ -1,10 +1,5 @@
-import * as spriteRenderer from './spriteRenderer.js'
-import * as gfx from './gfx.js'
-/** @type { WebGLRenderingContext } */
-const gl = gfx.gl
-
-const vertsPerQuad = 4
-
+import * as SpriteRenderer from './SpriteRenderer.js'
+import gl from '../gl.js'
 
 export default class SpriteGroup {
 	constructor(maxQuads_, textureSrc_, textureWidth_, textureHeight_) {
@@ -19,9 +14,9 @@ export default class SpriteGroup {
 		})
 		this.textureWidth = textureWidth_
 		this.textureHeight = textureHeight_
-		this.instanceArray = new Uint32Array(this.maxQuads * spriteRenderer.elementsPerInstance)
+		this.instanceArray = new Uint32Array(this.maxQuads * SpriteRenderer.elementsPerInstance)
 		this.glBuffer = twgl.createBufferFromTypedArray(gl, this.instanceArray, gl.ARRAY_BUFFER, gl.DYNAMIC_DRAW)
-		this.vaoInfo = spriteRenderer.createVao(this.maxQuads, this.glBuffer)
+		this.vaoInfo = SpriteRenderer.createVao(this.maxQuads, this.glBuffer)
 		this.quadCount = 0
 		this.quadHoles = []
 	}
@@ -44,14 +39,18 @@ export default class SpriteGroup {
 		this.quadHoles.push(quadId)
 		this.writeQuad(quadId, 0, 0, 0, 0, 0, 0)
 	}
-	writeQuad(quadId, x, y, w, h, u, v) {
-		const index = quadId * spriteRenderer.elementsPerInstance
-		this.instanceArray[index + 0] = x
-		this.instanceArray[index + 1] = y
-		this.instanceArray[index + 2] = w
-		this.instanceArray[index + 3] = h
-		this.instanceArray[index + 4] = u
-		this.instanceArray[index + 5] = v
+	//writeQuad(quadId, x, y, w, h, u, v) {
+	//	const index = quadId * SpriteRenderer.elementsPerInstance
+	//	this.instanceArray[index + 0] = x
+	//	this.instanceArray[index + 1] = y
+	//	this.instanceArray[index + 2] = w
+	//	this.instanceArray[index + 3] = h
+	//	this.instanceArray[index + 4] = u
+	//	this.instanceArray[index + 5] = v
+	//}
+	getSubArray(quadId) {
+		const index = quadId * SpriteRenderer.elementsPerInstance
+		return this.instanceArray.subarray(index, index + SpriteRenderer.elementsPerInstance)
 	}
 	drawQuads(programInfo) {
 		// OPTIMIZE: only write array if it's changed. only write up to the quadCount. only write the part of the array that has changed
