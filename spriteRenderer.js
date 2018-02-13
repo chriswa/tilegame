@@ -16,20 +16,20 @@ const vertexShaderSource = `#version 300 es
 
 	void main() {
 
-		float x      = float((a_instancePackedInt1[0] >> 0) & 0xffff);
-		float y      = float((a_instancePackedInt1[1] >> 0) & 0xffff);
-		float width  = float((a_instancePackedInt1[2] >> 0) & 0xffff);
-		float height = float((a_instancePackedInt1[3] >> 0) & 0xffff);
-		float u      = float((a_instancePackedInt2[0] >> 0) & 0xffff);
-		float v      = float((a_instancePackedInt2[1] >> 0) & 0xffff);
+		float x = float((a_instancePackedInt1[0] >> 0) & 0xffff);
+		float y = float((a_instancePackedInt1[1] >> 0) & 0xffff);
+		float w = float((a_instancePackedInt1[2] >> 0) & 0xffff);
+		float h = float((a_instancePackedInt1[3] >> 0) & 0xffff);
+		float u = float((a_instancePackedInt2[0] >> 0) & 0xffff);
+		float v = float((a_instancePackedInt2[1] >> 0) & 0xffff);
 
 
 		// detemine corner from gl_VertexID!
 		int cornerId = gl_VertexID % 4;
 		float cornerX = float(((cornerId + 1) & 2) >> 1);
 		float cornerY = float((cornerId & 2) >> 1);
-		float dx = width * cornerX;
-		float dy = height * cornerY;
+		float dx = w * cornerX;
+		float dy = h * cornerY;
 
 		vec4 position = vec4(
 			float(x + dx),
